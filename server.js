@@ -1,7 +1,11 @@
-"use strict";
+console.log("API key:", process.env.CLIENT_ID);
 
-const express = require("express");
+import express from "express";
+import cors from "cors";
+
 const app = express();
+
+app.use(cors());
 
 const port = 3000;
 
