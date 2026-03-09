@@ -1,17 +1,49 @@
-console.log("API key:", process.env.CLIENT_ID);
-
 import express from "express";
 import cors from "cors";
+import path from "path";
 
 const app = express();
 
-app.use(cors());
-
 const port = 3000;
 
-app.use(express.static("./front"));
+const corsOptions = {
+  origin: `http://localhost:${port}`,
+};
+
+app.use(cors(corsOptions));
+
+app.use(express.static(path.join(import.meta.dirname, "front")));
 app.use(express.json);
 app.use(express.urlencoded({ extended: false }));
+
+async function imageAndQuote() {
+  try {
+    const image = `https://api.unsplash.com/topics/relaxation/photos?client_id=${process.env.UNSPLASH_KEY}`;
+
+    const response = await fetch(image);
+    const data = await response.json();
+    const imageUrl = data;
+    console.log(data);
+
+    return imageUrl;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+app.get("/api/v1/imageAndQuote", async (request, response) => {
+  try {
+    const images = await imageAndQuote();
+
+    response.status(200).json({
+      status: 200,
+      data: images,
+    });
+  } catch (error) {
+    response.status(500).json({ error: error.message });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running http://localhost:${port}`);
   console.log("Press Ctrl+C/Cmd+C to end this process.");
