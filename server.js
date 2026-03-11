@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import path from "path";
@@ -18,7 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 
 async function imageAndQuote() {
   try {
-    const image = `https://api.unsplash.com/topics/relaxation/photos?client_id=${process.env.UNSPLASH_KEY}`;
+    const image = `https://api.unsplash.com/topics?client_id=${process.env.UNSPLASH_KEY}`;
 
     const response = await fetch(image);
     const data = await response.json();
@@ -46,5 +47,5 @@ app.get("/api/v1/imageAndQuote", async (request, response) => {
 
 app.listen(port, () => {
   console.log(`Server is running http://localhost:${port}`);
-  console.log("Press Ctrl+C/Cmd+C to end this process.");
+  console.log("Press Ctrl+C to end this process.");
 });
