@@ -10,3 +10,5 @@ async function imageAndQuote() {
     console.error(error);
   }
 }
+
+imageAndQuote();
