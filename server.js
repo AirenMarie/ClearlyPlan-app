@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import path from "path";
 
 const app = express();
 
@@ -13,8 +12,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use(express.static(path.join(import.meta.dirname, "front")));
-app.use(express.json);
+app.use(express.static("public"));
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 async function imageAndQuote() {
