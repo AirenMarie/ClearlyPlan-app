@@ -3,11 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <meta
+    <meta
       http-equiv="Content-Security-Policy"
-      content="connect-src 'self' http://localhost:3000"
-    /> -->
-    <link rel="stylesheet" href="/public/css/styles.css" />
+      content="
+  default-src 'none';
+  connect-src 'self' http://localhost:3000;
+  img-src 'self';
+  script-src 'self';
+  style-src 'self' 'unsafe-inline';
+"
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' https://use.typekit.net; style-src 'self' 'unsafe-inline' https://use.typekit.net; img-src 'self' https://p.typekit.net; connect-src 'self' https://performance.typekit.net; font-src 'self' data: https://use.typekit.net;  style-src-elem 'self' https://use.typekit.net;"
+    />
+    <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="https://use.typekit.net/cgi4jsd.css" />
     <title>ClearlyPlan v1.0</title>
   </head>
@@ -19,7 +29,7 @@
       <div id="greeting">
         <h1 id="greeting-text"></h1>
       </div>
-      <div id="menu"> </div>
+      <div id="menu"></div>
     </header>
     <main>
       <section id="cal-section">
@@ -32,6 +42,6 @@
       </section>
     </main>
     <footer id="page-footer"></footer>
-    <script src="/public/js/index.js"></script>
+    <script src="/js/index.js"></script>
   </body>
 </html>
