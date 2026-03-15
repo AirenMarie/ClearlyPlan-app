@@ -1,11 +1,12 @@
 * {
-  font-family: "ivysoft-variable", sans-serif;
+  font-family: sans-serif;
   box-sizing: border-box;
+  color: #5353ba;
 }
 
 main {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 #calendar-body {
@@ -17,10 +18,11 @@ main {
 #cal-section {
   padding: 40px;
   margin: auto;
-  width: 750px;
+  width: 50%;
 }
 
 #cal-header {
+  color: #5353ba;
   display: flex;
   gap: 20px;
   width: 400px;
@@ -48,10 +50,6 @@ main {
   grid-template-rows: repeat(6, 75px);
   gap: 3px;
   justify-content: center;
-}
-
-#cal-header {
-  max-width: 400px;
 }
 
 .day {
