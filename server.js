@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 
 async function imageAndQuote() {
   try {
-    const image = `https://api.unsplash.com/topics?client_id=${process.env.UNSPLASH_KEY}`;
+    const image = `https://api.unsplash.com/topics/spring/photos?client_id=${process.env.UNSPLASH_KEY}`;
 
     const response = await fetch(image);
     const data = await response.json();
