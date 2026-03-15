@@ -53,7 +53,7 @@ const updateCalendar = (month, year) => {
   const theFirst = new Date();
   theFirst.setDate(1);
   theFirst.setMonth(month);
-  theFirst.setFullYear(year);
+  theFirst.setYear(year);
 
   const firstDayOfWeek = theFirst.getDay();
   const monthName = months[month];
@@ -72,7 +72,7 @@ const updateCalendar = (month, year) => {
     if (i < numberOfWeeks * 7) {
       day.style.display = "block";
     } else {
-      day.stylr.display = "none";
+      day.style.display = "none";
     }
   });
 
@@ -105,3 +105,6 @@ const nextMonth = () => {
   }
   updateCalendar(++currentMonth, currentYear);
 };
+
+drawCalBody();
+updateCalendar(currentMonth, currentYear);
