@@ -1,28 +1,45 @@
 * {
-  font-family: sans-serif;
+  font-family: "ivysoft-variable", sans-serif;
   box-sizing: border-box;
   color: #5353ba;
 }
 
 main {
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
-#calendar-body {
+/* #calendar-body {
   margin: 0;
   padding: 0;
   background-color: hsla(208, 100%, 97%, 0.8);
 }
+ */
+
+.add-task-or-event-btn,
+.edit-task-or-event-btn {
+  border: none;
+  background: none;
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  position: relative;
+  right: 5%;
+  top: 5%;
+}
 
 #cal-section {
   padding: 40px;
-  margin: auto;
+  margin: 0 auto;
   width: 50%;
 }
 
 #cal-header {
   color: #5353ba;
+  margin: 0 auto;
   display: flex;
   gap: 20px;
   width: 400px;
@@ -46,15 +63,15 @@ main {
   max-height: 100%;
   max-width: 100%;
   display: grid;
-  grid-template-columns: repeat(7, 75px);
-  grid-template-rows: repeat(6, 75px);
+  grid-template-columns: repeat(7, 150px);
+  grid-template-rows: repeat(6, 150px);
   gap: 3px;
   justify-content: center;
 }
 
 .day {
-  width: 75px;
-  height: 75px;
+  width: 150px;
+  height: 150px;
   padding: 10px;
   background-color: hsla(208, 100%, 97%, 0.8);
   border-radius: 5px;
@@ -73,11 +90,25 @@ main {
 }
 
 .day-name {
-  font-size: 12px;
+  font-size: 20px;
   margin: 0 10px 0 0;
 }
 
 .day-set {
   display: flex;
   justify-content: space-evenly;
+}
+
+.fa-solid,
+.fa-pen,
+.fa-plus {
+  width: 20px;
+  height: 20px;
+}
+
+#quote-section {
+  max-width: 25%;
+  max-height: 25%;
+  margin: 0 auto;
+  background-color: rgb(0, 179, 255);
 }
