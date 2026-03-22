@@ -3,22 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="
-  default-src 'none';
-  connect-src 'self' http://localhost:3000;
-  img-src 'self';
-  script-src 'self';
-  style-src 'self' 'unsafe-inline';
-"
-    />
-    <!-- <meta
-      http-equiv="Content-Security-Policy"
-      content="script-src 'self' 'unsafe-inline' 'unsafe-hashes' https://use.typekit.net; style-src 'self' 'unsafe-inline' https://use.typekit.net; img-src 'self' https://p.typekit.net; connect-src 'self' https://performance.typekit.net; font-src 'self' data: https://use.typekit.net;  style-src-elem 'self' https://use.typekit.net;"
-    /> -->
     <link rel="stylesheet" href="/css/styles.css" />
-    <!-- <link rel="stylesheet" href="https://use.typekit.net/cgi4jsd.css" /> -->
+    <link rel="stylesheet" href="https://use.typekit.net/dqu4ukv.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
     <title>ClearlyPlan v1.0</title>
   </head>
   <body>
@@ -34,11 +24,14 @@
     <main>
       <section id="cal-section">
         <div id="cal-header">
-          <button class="cal-nav" onclick="previousMonth()">&lt;</button>
+          <button class="cal-nav" id="prev-month">&lt;</button>
           <h1 id="current-month"></h1>
-          <button class="cal-nav" onclick="nextMonth()">&gt;</button>
+          <button class="cal-nav" id="next-month">&gt;</button>
         </div>
         <article id="cal-body"></article>
+      </section>
+      <section id="quote-section">
+        <article id="quote"></article>
       </section>
     </main>
     <footer id="page-footer"></footer>
