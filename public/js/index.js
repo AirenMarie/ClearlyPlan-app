@@ -4,12 +4,15 @@ async function fetchImages() {
 
     const response = await fetch(endpoint);
     const result = await response.json();
-    const imgUrl = result.data;
+    const topImage = result.results?.[0] || results[0] || result;
+    const imgUrl = topImage?.urls?.regular;
 
-    console.log(result);
+    console.log(imgUrl);
 
-    const quoteCard = document.querySelector("#quote-section");
-    quoteCard.style.backgroundImage = `url("${imgUrl}")`;
+    const quoteCard = document.getElementById("quote-section");
+    if (imgUrl) {
+      quoteCard.style.backgroundImage = `url("${imgUrl}")`;
+    }
   } catch (error) {
     console.error(error);
   }
@@ -21,19 +24,23 @@ async function fetchQuotes() {
 
     const response = await fetch(endpoint);
     const result = await response.json();
-    const data = result[0];
 
-    console.log(data);
+    console.log(result.data[0].quote);
 
-    const quoteText = document.querySelector("#quote");
+    const quoteText = document.getElementById("quote");
 
-    if (quoteText && data) {
-      quoteText.innerHTML = `<p><i>"${data.quote}"</i>--${data.author}</p>`;
+    if (quoteText && result) {
+      quoteText.innerHTML = `<p><i>"${result.data[0].quote}"</i>--${result.data[0].author}</p>`;
     }
   } catch (error) {
     console.error(error);
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log(document.getElementById("quote-section"));
+  console.log(document.getElementById("quote"));
+});
 
 fetchImages();
 fetchQuotes();
