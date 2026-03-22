@@ -1,5 +1,8 @@
+// access the DOM to declare variables for creating the calendar
 const calendar = document.getElementById("cal-body");
 const monthEl = document.getElementById("current-month");
+const prevMonthBtn = document.getElementById("prev-month");
+const nextMonthBtn = document.getElementById("next-month");
 
 const months = [
   "January",
@@ -18,10 +21,14 @@ const months = [
 
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+let events;
+let tasks;
+
 const today = new Date();
 let currentMonth = today.getMonth();
 let currentYear = today.getFullYear();
 
+//draw the calendar
 const drawCalBody = () => {
   for (let i = 0; i < 42; i++) {
     const daySet = document.createElement("div");
@@ -37,16 +44,35 @@ const drawCalBody = () => {
     const dayNum = document.createElement("p");
     dayNum.classList.add("day-number");
 
+    const addTaskOrEventBtn = document.createElement("button");
+    addTaskOrEventBtn.classList.add("add-task-or-event-btn");
+    addTaskOrEventBtn.innerHTML = `<i class="fa-solid fa-plus"></i>`;
+
+    const editTaskOrEventBtn = document.createElement("button");
+    editTaskOrEventBtn.classList.add("edit-task-or-event-btn");
+    editTaskOrEventBtn.innerHTML = `<i class="fa-solid fa-pen"></i>`;
+
+    const eventName = document.createElement("small");
+    eventName.classList.add(".event-name");
+
+    const taskName = document.createElement("small");
+    taskName.classList.add("task-name");
+
     daySet.appendChild(dayName);
     daySet.appendChild(dayNum);
 
     day.appendChild(daySet);
+    day.appendChild(eventName);
+    day.appendChild(taskName);
+    day.appendChild(addTaskOrEventBtn);
+    day.appendChild(editTaskOrEventBtn);
 
     calendar.appendChild(day);
   }
 };
 
-const updateCalendar = (month, year) => {
+// update the calendar to display added/edited/deleted tasks or events
+const updateCalendar = (month, year, events, tasks) => {
   const dayElements = document.querySelectorAll(".day");
   const calendarBody = document.getElementById("cal-body");
 
@@ -64,7 +90,7 @@ const updateCalendar = (month, year) => {
   const totalDays = firstDayOfWeek + daysInMonth;
   const numberOfWeeks = Math.ceil(totalDays / 7);
 
-  calendarBody.style.gridTemplateRows = `repeat(${numberOfWeeks}, 75px)`;
+  calendarBody.style.gridTemplateRows = `repeat(${numberOfWeeks}, 150px)`;
 
   let dayCount = 1;
 
@@ -81,6 +107,22 @@ const updateCalendar = (month, year) => {
     const dayNumber = day.querySelector("day-number");
     if (i >= firstDayOfWeek && dayCount <= daysInMonth) {
       const thisDate = new Date(year, month, dayCount);
+      const eventName = document.querySelector(".event-name");
+      const taskName = document.querySelector(".task-name");
+
+      if (events[thisDate]) {
+        const event = events[thisDate];
+        eventName.innerText = `${event.title}`;
+      } else {
+        eventName.innerText = ``;
+      }
+
+      if (tasks[thisDate]) {
+        const task = tasks[thisDate];
+        taskName.innerText = `${task.title}`;
+      } else {
+        taskName.innerText = ``;
+      }
 
       dayNumber.innerText = dayCount;
       dayCount++;
@@ -90,12 +132,13 @@ const updateCalendar = (month, year) => {
   }
 };
 
+// navigate the calendar by month
 const previousMonth = () => {
   if (currentMonth === 0) {
     currentMonth = 12;
     currentYear--;
   }
-  updateCalendar(--currentMonth, currentYear);
+  updateCalendar(--currentMonth, currentYear, events, tasks);
 };
 
 const nextMonth = () => {
@@ -103,8 +146,11 @@ const nextMonth = () => {
     currentMonth = -1;
     currentYear++;
   }
-  updateCalendar(++currentMonth, currentYear);
+  updateCalendar(++currentMonth, currentYear, events, tasks);
 };
 
+prevMonthBtn.addEventListener("click", previousMonth);
+nextMonthBtn.addEventListener("click", nextMonth);
+
 drawCalBody();
-updateCalendar(currentMonth, currentYear);
+updateCalendar(currentMonth, currentYear, events, tasks);
