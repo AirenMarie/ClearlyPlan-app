@@ -4,8 +4,8 @@ async function fetchImages() {
 
     const response = await fetch(endpoint);
     const result = await response.json();
-    const topImage = result.results?.[0] || results[0] || result;
-    const imgUrl = topImage?.urls?.regular;
+    const topImage = result[0];
+    const imgUrl = topImage.urls.regular;
 
     console.log(imgUrl);
 
@@ -27,7 +27,7 @@ async function fetchQuotes() {
 
     console.log(result.data[0].quote);
 
-    const quoteText = document.getElementById("quote");
+    const quoteText = document.getElementById("quote-text");
 
     if (quoteText && result) {
       quoteText.innerHTML = `<p><i>"${result.data[0].quote}"</i>--${result.data[0].author}</p>`;
