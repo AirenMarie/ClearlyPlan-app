@@ -90,7 +90,7 @@ const updateCalendar = (month, year, events, tasks) => {
   const totalDays = firstDayOfWeek + daysInMonth;
   const numberOfWeeks = Math.ceil(totalDays / 7);
 
-  calendarBody.style.gridTemplateRows = `repeat(${numberOfWeeks}, 150px)`;
+  calendarBody.style.gridTemplateRows = `repeat(${numberOfWeeks}, 1fr)`;
 
   let dayCount = 1;
 
