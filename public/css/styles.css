@@ -4,12 +4,17 @@
   color: #5353ba;
 }
 
+#page-header {
+  height: 75px;
+  width: 100vw;
+  padding: 0 10px;
+}
+
 main {
-  margin: 0;
+  width: 450px;
+  height: 100vh;
+  margin: 0 auto;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 /* #calendar-body {
@@ -23,8 +28,8 @@ main {
 .edit-task-or-event-btn {
   border: none;
   background: none;
-  width: 20px;
-  height: 20px;
+  width: 7px;
+  height: 7px;
   margin: 5px;
   position: relative;
   right: 5%;
@@ -32,9 +37,12 @@ main {
 }
 
 #cal-section {
-  padding: 40px;
   margin: 0 auto;
-  width: 50%;
+  width: 95%;
+  height: 40%;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center; */
 }
 
 #cal-header {
@@ -44,14 +52,13 @@ main {
   gap: 20px;
   width: 400px;
   justify-content: space-between;
-  align-items: center;
 }
 
 .cal-nav {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 18px;
   transition: transform 250ms;
 }
 
@@ -60,20 +67,21 @@ main {
 }
 
 #cal-body {
-  max-height: 100%;
-  max-width: 100%;
+  margin: 20px auto;
+  height: 100%;
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(7, 150px);
-  grid-template-rows: repeat(6, 150px);
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
   gap: 3px;
   justify-content: center;
 }
 
 .day {
-  width: 150px;
-  height: 150px;
-  padding: 10px;
-  background-color: hsla(208, 100%, 97%, 0.8);
+  max-width: 60px;
+  max-height: 60px;
+  padding: 0;
+  background-color: hsla(208, 100%, 87%, 0.8);
   border-radius: 5px;
   transition: all 250ms;
 }
@@ -90,7 +98,7 @@ main {
 }
 
 .day-name {
-  font-size: 20px;
+  font-size: 1.2em;
   margin: 0 10px 0 0;
 }
 
@@ -102,13 +110,31 @@ main {
 .fa-solid,
 .fa-pen,
 .fa-plus {
-  width: 20px;
-  height: 20px;
+  width: 0.5em;
+  height: 0.5em;
 }
 
 #quote-section {
-  max-width: 50%;
-  max-height: 50%;
-  margin: 0 auto;
+  width: 90%;
+  height: 40%;
+  margin: 115px auto;
   background-color: rgb(0, 179, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#quote-text {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+#quote-text p {
+  padding: 10px;
+  text-align: center;
 }
