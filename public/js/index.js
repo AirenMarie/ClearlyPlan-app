@@ -4,7 +4,9 @@ async function fetchImages() {
 
     const response = await fetch(endpoint);
     const result = await response.json();
-    const topImage = result[0];
+
+    const randomImg = Math.floor(Math.random() * result.data.length);
+    const topImage = result.data[randomImg];
     const imgUrl = topImage.urls.regular;
 
     console.log(imgUrl);
@@ -12,6 +14,8 @@ async function fetchImages() {
     const quoteCard = document.getElementById("quote-section");
     if (imgUrl) {
       quoteCard.style.backgroundImage = `url("${imgUrl}")`;
+      quoteCard.style.backgroundSize = "cover";
+      quoteCard.style.backgroundPosition = "center";
     }
   } catch (error) {
     console.error(error);
@@ -39,7 +43,7 @@ async function fetchQuotes() {
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log(document.getElementById("quote-section"));
-  console.log(document.getElementById("quote"));
+  console.log(document.getElementById("quote-text"));
 });
 
 fetchImages();
