@@ -3,6 +3,9 @@ const calendar = document.getElementById("cal-body");
 const monthEl = document.getElementById("current-month");
 const prevMonthBtn = document.getElementById("prev-month");
 const nextMonthBtn = document.getElementById("next-month");
+const addTaskForm = document.getElementById("add-task-form");
+const cancelBtn = document.getElementById("cancel-btn");
+const saveBtn = document.getElementById("save-btn");
 
 const months = [
   "January",
@@ -148,6 +151,10 @@ const nextMonth = () => {
   }
   updateCalendar(++currentMonth, currentYear, events, tasks);
 };
+
+/* addTaskOrEventBtn.addEventListener('click', {} => {
+  
+}) */
 
 prevMonthBtn.addEventListener("click", previousMonth);
 nextMonthBtn.addEventListener("click", nextMonth);
