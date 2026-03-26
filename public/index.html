@@ -30,9 +30,93 @@
         </div>
         <article id="cal-body"></article>
       </section>
+      <section class="hidden" id="form-container">
+        <form id="add-task-form">
+          <button class="form-btn" id="cancel-btn">Cancel</button>
+          <button class="form-btn" id="save-btn">Save</button>
+          <fieldset class="form-section" id="task-or-event">
+            <legend class="section-name">Add a task or event</legend>
+            <label for="plan-type">This is a:</label>
+            <label for="task">
+              <input
+                type="radio"
+                id="task"
+                name="plan-type"
+                class="selection"
+                value="task"
+                selected
+              />Task</label
+            >
+            <label for="event">
+              <input
+                type="radio"
+                id="event"
+                name="plan-type"
+                class="selection"
+                value="event"
+              />Event
+            </label>
+            <label for="task-title"
+              ><input
+                type="text"
+                id="task-title"
+                class="task-field"
+                placeholder="Title"
+            /></label>
+            <label for="task-desc">
+              <input
+                type="text"
+                id="task-desc"
+                class="task-field"
+                placeholder="Description"
+              />
+            </label>
+          </fieldset>
+          <fieldset class="form-section" id="date-and-time">
+            <legend class="section-name">Duration</legend>
+            <label for="date-time-select">Set a date and time:</label>
+            <label for="all-day">
+              <input
+                type="radio"
+                id="all-day"
+                name="date-time-select"
+                class="selection"
+                value="all-day"
+                selected
+              />All Day
+            </label>
+            <br />
+            <label for="start-and-end"
+              ><input
+                type="radio"
+                id="start-and-end"
+                name="date-time-select"
+                class="selection"
+                value="start-and-end"
+              />Start:<input
+                type="datetime-local"
+                id="start"
+                name="start-and-end"
+                class="date-selection"
+                value="2026-03-25T21:29"
+              /><br />
+              End:
+              <input
+                type="datetime-local"
+                id="end"
+                name="start-and-end"
+                class="date-selection"
+                value="2026-03-25T21:29"
+              />
+            </label>
+          </fieldset>
+          <fieldset class="form-section" id="add-reminder"></fieldset>
+        </form>
+      </section>
       <section id="quote-section">
         <article id="quote-text"></article>
       </section>
+      <dialog id="add-task-window"></dialog>
     </main>
     <footer id="page-footer"></footer>
     <script src="/js/index.js"></script>
