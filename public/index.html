@@ -37,80 +37,204 @@
           <fieldset class="form-section" id="task-or-event">
             <legend class="section-name">Add a task or event</legend>
             <label for="plan-type">This is a:</label>
-            <label for="task">
-              <input
-                type="radio"
-                id="task"
-                name="plan-type"
-                class="selection"
-                value="task"
-                selected
-              />Task</label
-            >
-            <label for="event">
-              <input
-                type="radio"
-                id="event"
-                name="plan-type"
-                class="selection"
-                value="event"
-              />Event
-            </label>
-            <label for="task-title"
-              ><input
-                type="text"
-                id="task-title"
-                class="task-field"
-                placeholder="Title"
-            /></label>
-            <label for="task-desc">
-              <input
-                type="text"
-                id="task-desc"
-                class="task-field"
-                placeholder="Description"
-              />
-            </label>
+            <div class="task-radio-div">
+              <label for="task">
+                <input
+                  type="radio"
+                  id="task"
+                  name="plan-type"
+                  class="selection"
+                  value="task"
+                  selected
+                />Task</label
+              >
+              <label for="event">
+                <input
+                  type="radio"
+                  id="event"
+                  name="plan-type"
+                  class="selection"
+                  value="event"
+                />Event
+              </label>
+            </div>
+            <div class="task-field-div">
+              <label for="task-title"
+                >Title:<br /><input
+                  type="text"
+                  id="task-title"
+                  class="task-field"
+                  placeholder="Title" /></label
+              ><br />
+              <label for="task-desc"
+                >Description:<br />
+                <input
+                  type="text"
+                  id="task-desc"
+                  class="task-field"
+                  placeholder="Description"
+                />
+              </label>
+            </div>
+            <br />
+            <label for="priority">Priority:</label>
+            <div class="priority-list">
+              <div class="priority-div">
+                <label for="low"
+                  ><input
+                    type="radio"
+                    id="low"
+                    name="priority"
+                    class="priority-select"
+                    selected
+                  /><i class="fa-solid fa-circle" id="green"></i>&ensp;
+                  Low</label
+                >
+              </div>
+              <div class="priority-div">
+                <label for="medium"
+                  ><input
+                    type="radio"
+                    id="medium"
+                    name="priority"
+                    class="priority-select"
+                  /><i class="fa-solid fa-circle" id="yellow"></i>&ensp;
+                  Medium</label
+                >
+              </div>
+              <div class="priority-div">
+                <label for="high"
+                  ><input
+                    type="radio"
+                    id="high"
+                    name="priority"
+                    class="priority-select"
+                  /><i class="fa-solid fa-circle" id="red"></i>&ensp;
+                  High</label
+                >
+              </div>
+            </div>
           </fieldset>
           <fieldset class="form-section" id="date-and-time">
             <legend class="section-name">Duration</legend>
             <label for="date-time-select">Set a date and time:</label>
-            <label for="all-day">
-              <input
-                type="radio"
-                id="all-day"
-                name="date-time-select"
-                class="selection"
-                value="all-day"
-                selected
-              />All Day
-            </label>
-            <br />
-            <label for="start-and-end"
-              ><input
-                type="radio"
-                id="start-and-end"
-                name="date-time-select"
-                class="selection"
-                value="start-and-end"
-              />Start:<input
-                type="datetime-local"
-                id="start"
-                name="start-and-end"
-                class="date-selection"
-                value="2026-03-25T21:29"
-              /><br />
-              End:
-              <input
-                type="datetime-local"
-                id="end"
-                name="start-and-end"
-                class="date-selection"
-                value="2026-03-25T21:29"
-              />
-            </label>
+            <div class="date-time-div">
+              <label for="all-day">
+                <input
+                  type="radio"
+                  id="all-day"
+                  name="date-time-select"
+                  class="selection"
+                  value="all-day"
+                  selected
+                />All Day
+              </label>
+              <br />
+              <label for="start-and-end"
+                ><input
+                  type="radio"
+                  id="start-and-end"
+                  name="date-time-select"
+                  class="selection"
+                  value="start-and-end"
+                />Start:<br /><input
+                  type="datetime-local"
+                  id="start"
+                  name="start-and-end"
+                  class="date-selection"
+                  value="2026-03-25T21:29"
+                /><br />
+                <span id="end-title">End:</span><br />
+                <input
+                  type="datetime-local"
+                  id="end"
+                  name="start-and-end"
+                  class="date-selection"
+                  value="2026-03-25T21:29"
+                />
+              </label>
+            </div>
           </fieldset>
-          <fieldset class="form-section" id="add-reminder"></fieldset>
+          <fieldset class="form-section" id="add-reminder">
+            <legend class="section-name">Set a reminder</legend>
+            <label for="reminder">Remind me:</label>
+            <div class="reminder-div">
+              <label for="five-minutes">
+                <input
+                  type="checkbox"
+                  id="five-minutes"
+                  name="reminder"
+                  class="reminder-select"
+                />
+                5 minutes before</label
+              >
+              <label for="ten-minutes">
+                <input
+                  type="checkbox"
+                  id="ten-minutes"
+                  name="reminder"
+                  class="reminder-select"
+                />
+                10 minutes before</label
+              >
+              <label for="fifteen-minutes">
+                <input
+                  type="checkbox"
+                  id="fifteen-minutes"
+                  name="reminder"
+                  class="reminder-select"
+                />
+                15 minutes before</label
+              >
+              <label for="thirty-minutes">
+                <input
+                  type="checkbox"
+                  id="thirty-minutes"
+                  name="reminder"
+                  class="reminder-select"
+                />
+                30 minutes before</label
+              >
+              <label for="one-hour">
+                <input
+                  type="checkbox"
+                  id="one-hour"
+                  name="reminder"
+                  class="reminder-select"
+                />
+                1 hour before</label
+              >
+              <label for="six-hours">
+                <input
+                  type="checkbox"
+                  id="six-hours"
+                  name="reminder"
+                  class="reminder-select"
+                />
+                6 hours before</label
+              >
+              <label for="twelve-hours">
+                <input
+                  type="checkbox"
+                  id="twelve-hours"
+                  name="reminder"
+                  class="reminder-select"
+                />
+                12 hours before</label
+              >
+              <label for="one-day">
+                <input
+                  type="checkbox"
+                  id="one-day"
+                  name="reminder"
+                  class="reminder-select"
+                />
+                1 day before</label
+              >
+              <button id="custom-reminder-btn">Custom...</button>
+            </div>
+            <dialog id="custom-reminder-popup"></dialog>
+          </fieldset>
         </form>
       </section>
       <section id="quote-section">
