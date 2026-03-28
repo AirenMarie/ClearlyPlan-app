@@ -107,16 +107,49 @@ main {
   justify-content: space-evenly;
 }
 
-.fa-solid,
-.fa-pen,
-.fa-plus {
+.date-selection {
+  margin-left: 40px;
+}
+
+#end-title {
+  margin-left: 22px;
+}
+
+#form-container {
+  width: 95%;
+}
+
+.fa-solid {
   width: 0.5em;
   height: 0.5em;
 }
 
-.hidden {
-  display: none;
+#green {
+  color: #5dcf00;
 }
+
+#yellow {
+  color: #fdda03;
+}
+
+#red {
+  color: #f80200;
+}
+
+.priority-list {
+  width: 70%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.reminder-div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* .hidden {
+  display: none;
+} */
 
 #quote-section {
   width: 90%;
