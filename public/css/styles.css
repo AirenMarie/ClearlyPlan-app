@@ -1,3 +1,9 @@
+/* What still needs to be done?...
+   - style dialog windows
+   - add media queries for tablet, desktop layout
+   - change day style
+   */
+
 * {
   font-family: "ivysoft-variable", sans-serif;
   box-sizing: border-box;
