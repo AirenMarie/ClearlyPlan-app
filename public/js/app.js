@@ -62,8 +62,8 @@ const months = [
 
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-let events;
-let tasks;
+let events = [];
+let tasks = [];
 
 const today = new Date();
 let currentMonth = today.getMonth();
@@ -150,10 +150,11 @@ const updateCalendar = (month, year, events, tasks) => {
       const thisDate = new Date(year, month, dayCount);
       const eventName = document.querySelector(".event-name");
       const taskName = document.querySelector(".task-name");
-      console.log(thisDate);
+      // console.log(thisDate);
 
       if (events[thisDate]) {
         const event = events[thisDate];
+        console.log(events[thisDate]);
         eventName.innerHTML = `<button class="btn"><i class="fa-solid fa-trash"></i>Delete</button>
         <button class="btn"><i class="fa-solid fa-xmark"></i>Close</button>
         <p>${event.title}</p>
