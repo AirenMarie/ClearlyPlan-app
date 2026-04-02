@@ -1,11 +1,49 @@
-// access the DOM to declare variables for creating the calendar
+/* What still needs to be done?...
+    - set up functionality to save and retrieve items in localStorage
+    - display items as tasks or events based on which radio button is selected
+    - display reminders based on which checkboxes are selected
+    - expand task/event info to view
+    - change color of day or task/event based on priority level
+    - display date based on which radio button is selected/date set
+    - set up functionality to edit or delete tasks
+    - ask about:
+      - proper implementations for adding and displaying tasks, setting reminders
+      - cleaning up code */
+
+// access the DOM to...
+// declare variables for creating the calendar
 const calendar = document.getElementById("cal-body");
 const monthEl = document.getElementById("current-month");
 const prevMonthBtn = document.getElementById("prev-month");
 const nextMonthBtn = document.getElementById("next-month");
+// declare variables for creating the task/event form
 const addTaskForm = document.getElementById("add-task-form");
-const cancelBtn = document.getElementById("cancel-btn");
-const saveBtn = document.getElementById("save-btn");
+const cancelTaskBtn = document.getElementById("cancel-task-btn");
+const deleteTaskBtn = document.getElementById("delete-task-btn");
+const saveTaskBtn = document.getElementById("save-task-btn");
+const formSection = document.getElementById("form-container");
+const taskRadioDiv = document.getElementById("task-radio-div");
+const taskRadio = document.getElementById("task");
+const eventRadio = document.getElementById("event");
+const taskTitleInput = document.getElementById("task-title");
+const taskDescInput = document.getElementById("task-desc");
+const lowRadio = document.getElementById("low");
+const mediumRadio = document.getElementById("medium");
+const highRadio = document.getElementById("high");
+const allDayRadio = document.getElementById("all-day");
+const startEndDateRadio = document.getElementById("start-and-end");
+const startDateTimeInput = document.getElementById("start");
+const endDateTimeInput = document.getElementById("end");
+// declare variables for creating popups
+const deleteTaskPopup = document.getElementById("delete-task-popup");
+const deleteEventPopup = document.getElementById("delete-event-popup");
+const confirmDeleteTaskBtn = document.getElementById("confirm-delete-task-btn");
+const confirmDeleteEventBtn = document.getElementById(
+  "confirm-delete-event-btn",
+);
+// declare variables for task and event data
+const taskEventData = JSON.parse(localStorage.getItem("data")) || [];
+let currentTaskEvent = {};
 
 const months = [
   "January",
@@ -49,16 +87,16 @@ const drawCalBody = () => {
 
     const addTaskOrEventBtn = document.createElement("button");
     addTaskOrEventBtn.classList.add("add-task-or-event-btn");
-    addTaskOrEventBtn.innerHTML = `<i class="fa-solid fa-plus"></i>`;
+    addTaskOrEventBtn.innerHTML = `<i class="fa-solid fa-plus hidden"></i>`;
 
     const editTaskOrEventBtn = document.createElement("button");
     editTaskOrEventBtn.classList.add("edit-task-or-event-btn");
-    editTaskOrEventBtn.innerHTML = `<i class="fa-solid fa-pen"></i>`;
+    editTaskOrEventBtn.innerHTML = `<i class="fa-solid fa-pen hidden"></i>`;
 
-    const eventName = document.createElement("small");
+    const eventName = document.createElement("div");
     eventName.classList.add(".event-name");
 
-    const taskName = document.createElement("small");
+    const taskName = document.createElement("div");
     taskName.classList.add("task-name");
 
     daySet.appendChild(dayName);
@@ -113,19 +151,29 @@ const updateCalendar = (month, year, events, tasks) => {
       const eventName = document.querySelector(".event-name");
       const taskName = document.querySelector(".task-name");
 
-      if (events[thisDate]) {
-        const event = events[thisDate];
-        eventName.innerText = `${event.title}`;
-      } else {
-        eventName.innerText = ``;
-      }
+      taskRadioDiv.oninput = (evt) => {
+        if (evt.target.name === "type") {
+          if (taskRadioDiv.type.value === "event" && events[thisDate]) {
+            const event = events[thisDate];
+            eventName.innerHTML = `<button class="btn"><i class="fa-solid fa-trash"></i>Delete</button>
+        <button class="btn"><i class="fa-solid fa-xmark"></i>Close</button>
+        <p>${event.title}</p>
+        <p>${event.description}<p>`;
+          } else {
+            eventName.innerHTML = ``;
+          }
 
-      if (tasks[thisDate]) {
-        const task = tasks[thisDate];
-        taskName.innerText = `${task.title}`;
-      } else {
-        taskName.innerText = ``;
-      }
+          if (taskRadioDiv.type.value === "task" && tasks[thisDate]) {
+            const task = tasks[thisDate];
+            taskName.innerHTML = `<button class="btn"><i class="fa-solid fa-trash"></i>&ensp; Delete</button>
+        <button class="btn"><i class="fa-solid fa-xmark"></i>&ensp; Close</button>
+        <p>${task.title}</p>
+        <p>${task.description}<p>`;
+          } else {
+            taskName.innerHTML = ``;
+          }
+        }
+      };
 
       dayNumber.innerText = dayCount;
       dayCount++;
@@ -150,6 +198,32 @@ const nextMonth = () => {
     currentYear++;
   }
   updateCalendar(++currentMonth, currentYear, events, tasks);
+};
+
+const cleanUpEntries = (str) => {
+  return str.replace(/[^a-zA-Z0-9\s]/g, "");
+};
+
+const addOrUpdate = () => {
+  const dataIndex = taskEventData.findIndex(
+    (item) => item.id === currentTaskEvent.id,
+  );
+  const taskEventObj = {
+    id: `${cleanUpEntries(taskTitleInput.value)
+      .toLowerCase()
+      .split(" ")
+      .join("-")}-${Date.now()}`,
+    title: cleanUpEntries(taskTitleInput.value),
+    description: cleanUpEntries(taskDescInput.value),
+  };
+
+  if (dataIndex === -1) {
+    taskEventData.unshift(taskEventObj);
+  } else {
+    taskEventData[dataIndex] = taskEventObj;
+  }
+  localStorage.setItem("data", JSON.stringify(taskEventData));
+  displayTaskOrEvent();
 };
 
 /* addTaskOrEventBtn.addEventListener('click', {} => {
