@@ -94,7 +94,7 @@ const drawCalBody = () => {
     editTaskOrEventBtn.innerHTML = `<i class="fa-solid fa-pen hidden"></i>`;
 
     const eventName = document.createElement("div");
-    eventName.classList.add(".event-name");
+    eventName.classList.add("event-name");
 
     const taskName = document.createElement("div");
     taskName.classList.add("task-name");
@@ -145,35 +145,32 @@ const updateCalendar = (month, year, events, tasks) => {
 
   for (let i = 0; i < dayElements.length; i++) {
     const day = dayElements[i];
-    const dayNumber = day.querySelector("day-number");
+    const dayNumber = day.querySelector(".day-number");
     if (i >= firstDayOfWeek && dayCount <= daysInMonth) {
       const thisDate = new Date(year, month, dayCount);
       const eventName = document.querySelector(".event-name");
       const taskName = document.querySelector(".task-name");
+      console.log(thisDate);
 
-      taskRadioDiv.oninput = (evt) => {
-        if (evt.target.name === "type") {
-          if (taskRadioDiv.type.value === "event" && events[thisDate]) {
-            const event = events[thisDate];
-            eventName.innerHTML = `<button class="btn"><i class="fa-solid fa-trash"></i>Delete</button>
+      if (events[thisDate]) {
+        const event = events[thisDate];
+        eventName.innerHTML = `<button class="btn"><i class="fa-solid fa-trash"></i>Delete</button>
         <button class="btn"><i class="fa-solid fa-xmark"></i>Close</button>
         <p>${event.title}</p>
         <p>${event.description}<p>`;
-          } else {
-            eventName.innerHTML = ``;
-          }
+      } else {
+        eventName.innerHTML = ``;
+      }
 
-          if (taskRadioDiv.type.value === "task" && tasks[thisDate]) {
-            const task = tasks[thisDate];
-            taskName.innerHTML = `<button class="btn"><i class="fa-solid fa-trash"></i>&ensp; Delete</button>
+      if (tasks[thisDate]) {
+        const task = tasks[thisDate];
+        taskName.innerHTML = `<button class="btn"><i class="fa-solid fa-trash"></i>&ensp; Delete</button>
         <button class="btn"><i class="fa-solid fa-xmark"></i>&ensp; Close</button>
         <p>${task.title}</p>
         <p>${task.description}<p>`;
-          } else {
-            taskName.innerHTML = ``;
-          }
-        }
-      };
+      } else {
+        taskName.innerHTML = ``;
+      }
 
       dayNumber.innerText = dayCount;
       dayCount++;
