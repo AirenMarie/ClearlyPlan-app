@@ -28,6 +28,14 @@
           <h1 id="current-month"></h1>
           <button class="cal-nav" id="next-month">&gt;</button>
         </div>
+        <div id="add-task-ui">
+          <button class="open-form-btn" id="add-new-task-btn">
+            <i class="fa-solid fa-plus"></i>&ensp; Add New Task
+          </button>
+          <button class="open-form-btn" id="edit-task-btn">
+            <i class="fa-solid fa-pen"></i>&ensp; Edit Task
+          </button>
+        </div>
         <article id="cal-body"></article>
       </section>
       <section class="hidden" id="form-container">
@@ -50,7 +58,7 @@
               <i class="fa-solid fa-trash"></i>&ensp; Delete
             </button>
           </dialog>
-          <dialog id="delete-event-popup">
+          <!-- <dialog id="delete-event-popup">
             <p>Are you sure you want to delete this event?</p>
             <button class="form-btn" id="go-back-event-btn">
               <i class="fa-solid fa-arrow-left"></i>&ensp; Go Back
@@ -58,10 +66,10 @@
             <button class="form-btn" id="confirm-delete-event-btn">
               <i class="fa-solid fa-trash"></i>&ensp; Delete
             </button>
-          </dialog>
+          </dialog> -->
           <fieldset class="form-section" id="task-or-event">
             <legend class="section-name">Add a task or event</legend>
-            <label for="type">This is a:</label>
+            <!-- <label for="type">This is a:</label>
             <div class="task-radio-div">
               <label for="task">
                 <input
@@ -82,7 +90,7 @@
                   value="event"
                 />Event
               </label>
-            </div>
+            </div> -->
             <div class="task-field-div">
               <label for="task-title"
                 >Title:<br /><input
@@ -180,7 +188,7 @@
               </label>
             </div>
           </fieldset>
-          <fieldset class="form-section" id="add-reminder">
+          <!-- <fieldset class="form-section" id="add-reminder">
             <legend class="section-name">Set a reminder</legend>
             <label for="reminder">Remind me:</label>
             <div class="reminder-div">
@@ -353,7 +361,7 @@
                 Save
               </button>
             </dialog>
-          </fieldset>
+          </fieldset> -->
         </form>
       </section>
       <section id="quote-section">
