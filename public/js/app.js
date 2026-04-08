@@ -101,20 +101,8 @@ window.addEventListener("DOMContentLoaded", () => {
     formContainer.classList.toggle("hidden");
     calContainer.classList.toggle("hidden");
   });
-  saveTaskBtn.addEventListener("click", () => {
-    formContainer.classList.toggle("hidden");
-    calContainer.classList.toggle("hidden");
 
-    const dateKey = date;
-    const taskInfo = taskTitleInput.value;
-
-    if (taskInfo) {
-      save(dateKey, taskInfo);
-      taskTitleInput.value = "";
-    }
-  });
-
-  /* lowRadio.addEventListener("click", () => {
+  lowRadio.addEventListener("click", () => {
     const dayElements = document.querySelector(".day");
     dayElements.style.backgroundColor = "#5dcf00";
   });
@@ -125,7 +113,7 @@ window.addEventListener("DOMContentLoaded", () => {
   highRadio.addEventListener("click", () => {
     const dayElements = document.querySelector(".day");
     dayElements.style.backgroundColor = "#f80200";
-  }); */
+  });
 
   drawCalBody();
   updateCalendar(currentMonth, currentYear, tasks);
@@ -302,9 +290,7 @@ const cleanUpEntries = (str) => {
 };
 
 const addOrUpdate = () => {
-  const dataIndex = taskData.findIndex(
-    (item) => item.id === currentTaskEvent.id,
-  );
+  const dataIndex = taskData.findIndex((item) => item.id === currentTask.id);
   const taskObj = {
     id: `${cleanUpEntries(taskTitleInput.value)
       .toLowerCase()
@@ -324,17 +310,34 @@ const addOrUpdate = () => {
 };
 
 const save = () => {
+  const dayEl = document.querySelectorAll(".day");
+
+  const date = dayEl.dataset.date;
+  console.log(date);
+
+  const dateKey = date;
+  const taskInfo = taskTitleInput.value;
+
   if (!taskData[dateKey]) {
     taskData[dateKey] = [];
   }
 
-  taskList[dateKey].push(taskInfo);
+  if (taskInfo) {
+    taskList[dateKey].push(taskInfo);
+    taskInfo = "";
+  }
 
   localStorage.setItem("data", JSON.stringify(taskData));
 
   console.log("Task(s) for ${dateKey}:", taskInfo);
 };
 
+saveTaskBtn.addEventListener("click", () => {
+  formContainer.classList.toggle("hidden");
+  calContainer.classList.toggle("hidden");
+
+  save();
+});
 /* addTaskOrEventBtn.addEventListener('click', {} => {
   
 }) */
