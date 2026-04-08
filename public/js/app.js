@@ -75,6 +75,17 @@ window.addEventListener("DOMContentLoaded", () => {
   confirmDeleteTaskBtn = document.getElementById("confirm-delete-task-btn");
   // confirmDeleteEventBtn = document.getElementById("confirm-delete-event-btn");
 
+  calendar.addEventListener("click", (e) => {
+    const dayEl = e.target.closest(".day");
+
+    if (dayEl) {
+      const date = dayEl.dataset.date;
+      console.log("Date selected:", date);
+
+      // loadTasksOfDay(date);
+    }
+  });
+
   prevMonthBtn.addEventListener("click", previousMonth);
   nextMonthBtn.addEventListener("click", nextMonth);
   addNewTaskBtn.addEventListener("click", () => {
@@ -153,11 +164,17 @@ let currentYear = today.getFullYear();
 //draw the calendar
 const drawCalBody = () => {
   for (let i = 0; i < 42; i++) {
+    const dayOneIdx = new Date(currentYear, currentMonth, 1).getDay();
+
+    const dateObj = new Date(currentYear, currentMonth, i - dayOneIdx + 1);
+    const key = dateObj.toISOString().split("T")[0];
+
     const daySet = document.createElement("div");
     daySet.classList.add("day-set");
 
     const day = document.createElement("div");
     day.classList.add("day");
+    day.dataset.date = key;
 
     const dayName = document.createElement("p");
     dayName.classList.add("day-name");
@@ -307,15 +324,13 @@ const addOrUpdate = () => {
 };
 
 const save = () => {
-  const taskList = taskData;
-
-  if (!taskList[dateKey]) {
-    taskList[dateKey] = [];
+  if (!taskData[dateKey]) {
+    taskData[dateKey] = [];
   }
 
   taskList[dateKey].push(taskInfo);
 
-  localStorage.setItem("data", JSON.stringify(taskList));
+  localStorage.setItem("data", JSON.stringify(taskData));
 
   console.log("Task(s) for ${dateKey}:", taskInfo);
 };
