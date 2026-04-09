@@ -54,6 +54,15 @@ const validate = (task) => {
   return true;
 };
 
+const getTask = (taskData, date, id) => {
+  const dayTasks = getDayTasks(taskData, date);
+  for (let i = 0; i < dayTaska.length; i++) {
+    const currentTask = dayTasks[i];
+    if (currentTask.id == id) {
+      return currentTask;
+    }
+  }
+};
 const update = (taskData, date, task) => {
   const dayTasks = getDayTasks(taskData, date);
 
@@ -81,4 +90,4 @@ const discard = (taskData, date, id) => {
   console.error("No task with that ID found");
 };
 
-export { getDayTasks, createEntry, validate, update, discard };
+export { getDayTasks, createEntry, validate, getTask, update, discard };
