@@ -12,20 +12,32 @@ const getDayTasks = (day) => {
   if (!taskData) {
     return;
   }
-  return taskData[day];
+  return taskData[day] || [];
 };
 console.log(getDayTasks("2025-04-01"));
 
 const createEntry = (id, task, description) => {
-    
-  return {
+  if (!taskData[date]) {
+    taskData[date] = [];
+  }
+  const dayTasks = getDayTasks(taskData, date);
+
+  let id = 0;
+  for (let i = 0; i < dayTasks.length; i++) {
+    const currentTask = dayTasks[i];
+    if (currentTask.id >= id) {
+      id = currentTask.id + 1;
+    }
+  }
+
+  const newTask = {
     id: id,
     title: task,
     description: description,
   };
+  dayTasks.push(newTask);
+  return newTask;
 };
-
-
 
 const validate = (task) => {
   const keys = Object.keys(task);
@@ -42,14 +54,8 @@ const validate = (task) => {
   return true;
 };
 
-validate({
-  id: 1,
-  task: "do the dishes",
-  description: "1. do dishes 2. take a nap",
-});
-
-const update = (date, task) => {
-  const dayTasks = getDayTasks(date);
+const update = (taskData, date, task) => {
+  const dayTasks = getDayTasks(taskData, date);
 
   for (let i = 0; i < dayTasks.length; i++) {
     const currentTask = dayTasks[i];
@@ -59,21 +65,20 @@ const update = (date, task) => {
       return;
     }
   }
-  console.log(`${task.id} updated`);
   console.error("No task with that ID found");
 };
 
-const deleteTasks = (date, id) => {
-  const dayTasks = getDayTasks(date);
+const discard = (taskData, date, id) => {
+  const dayTasks = getDayTasks(taskData, date);
   for (let i = 0; i < dayTasks.length; i++) {
     const currentTask = dayTasks[i];
     if (currentTask.id === task.id) {
       dayTasks.splice(i, 1);
       console.log("Task ${id} deleted");
+      return;
     }
   }
+  console.error("No task with that ID found");
 };
 
-update("2025-04-01", createEntry(1, "take a nap", "leave me alone"));
-
-export { getDayTasks, createEntry, validate, update, deleteTasks };
+export { getDayTasks, createEntry, validate, update, discard };
