@@ -9,6 +9,14 @@
     - ask about:
       - proper implementations for adding and displaying tasks, setting reminders
       - cleaning up code */
+// import functions for managing tasks
+import {
+  getDayTasks,
+  createEntry,
+  validate,
+  update,
+  deleteTasks,
+} from "./tasks.js";
 // access the DOM to...
 // declare variables for creating the calendar
 let calContainer;
@@ -101,8 +109,15 @@ window.addEventListener("DOMContentLoaded", () => {
     formContainer.classList.toggle("hidden");
     calContainer.classList.toggle("hidden");
   });
+  saveTaskBtn.addEventListener("click", () => {
+    formContainer.classList.toggle("hidden");
+    calContainer.classList.toggle("hidden");
 
-  lowRadio.addEventListener("click", () => {
+    save();
+    console.log("Save button clicked");
+  });
+
+  /*  lowRadio.addEventListener("click", () => {
     const dayElements = document.querySelector(".day");
     dayElements.style.backgroundColor = "#5dcf00";
   });
@@ -113,7 +128,7 @@ window.addEventListener("DOMContentLoaded", () => {
   highRadio.addEventListener("click", () => {
     const dayElements = document.querySelector(".day");
     dayElements.style.backgroundColor = "#f80200";
-  });
+  }); */
 
   drawCalBody();
   updateCalendar(currentMonth, currentYear, tasks);
@@ -124,6 +139,8 @@ window.addEventListener("DOMContentLoaded", () => {
 // declare variables for task and event data
 const taskData = JSON.parse(localStorage.getItem("data")) || {};
 let currentTask = {};
+
+console.log(taskData);
 
 const months = [
   "January",
@@ -157,6 +174,9 @@ const drawCalBody = () => {
     const dateObj = new Date(currentYear, currentMonth, i - dayOneIdx + 1);
     const key = dateObj.toISOString().split("T")[0];
 
+    const taskList = JSON.parse(localStorage.getItem("tasks")) || {};
+    const thisDayTasks = taskList[key] || [];
+
     const daySet = document.createElement("div");
     daySet.classList.add("day-set");
 
@@ -178,6 +198,19 @@ const drawCalBody = () => {
     const editTaskIcon = document.createElement("button");
     editTaskIcon.classList.add("edit-task-icon");
     editTaskIcon.innerHTML = `<i class="fa-solid fa-pen hidden"></i>`;
+
+    if (thisDayTasks.length > 0) {
+      const priorityLvls = thisDayTasks.map((task) => task.priority);
+
+      if (priorityLvls.includes("low-lvl")) {
+        day.classList.add("low-lvl");
+      } else if (priorityLvls.includes("medium-lvl")) {
+        day.classList.add("medium-lvl");
+      } else if (priorityLvls.includes("high-lvl")) {
+        day.classList.add("high-lvl");
+      }
+      updateCalendar(day);
+    }
 
     /* const eventName = document.createElement("div");
     eventName.classList.add("event-name"); */
@@ -247,7 +280,7 @@ const updateCalendar = (month, year, tasks) => {
         eventName.innerHTML = ``;
       } */
 
-      console.log({ taskName, tasks });
+      // console.log({ taskName, tasks });
 
       if (taskName && tasks && tasks[thisDate]) {
         const task = tasks[thisDate];
@@ -310,34 +343,31 @@ const addOrUpdate = () => {
 };
 
 const save = () => {
-  const dayEl = document.querySelectorAll(".day");
-
+  const dayEl = document.querySelector(".day");
+  console.log(dayEl.dataset);
   const date = dayEl.dataset.date;
-  console.log(date);
 
-  const dateKey = date;
+  const taskList = JSON.parse(localStorage.getItem("tasks")) || [];
+  const dateKey = [...date];
   const taskInfo = taskTitleInput.value;
 
-  if (!taskData[dateKey]) {
-    taskData[dateKey] = [];
+  if (!taskData.dateKey) {
+    taskData.dateKey = [];
   }
 
   if (taskInfo) {
-    taskList[dateKey].push(taskInfo);
+    console.log(`Type of date key is: ${typeof dateKey}`);
+    taskList.dateKey.push(taskInfo);
     taskInfo = "";
   }
 
   localStorage.setItem("data", JSON.stringify(taskData));
 
-  console.log("Task(s) for ${dateKey}:", taskInfo);
+  console.log(`Task(s) for ${dateKey}:`, taskInfo);
 };
 
-saveTaskBtn.addEventListener("click", () => {
-  formContainer.classList.toggle("hidden");
-  calContainer.classList.toggle("hidden");
+const loadTasksOfDay = () => {};
 
-  save();
-});
 /* addTaskOrEventBtn.addEventListener('click', {} => {
   
 }) */
