@@ -145,6 +145,18 @@ main {
   color: #f80200;
 }
 
+.low-lvl {
+  border: 4px solid #5dcf00;
+}
+
+.medium-lvl {
+  border: 4px solid #fdda03;
+}
+
+.high-lvl {
+  border: 4px solid #f80200;
+}
+
 .priority-list {
   width: 70%;
   display: flex;
