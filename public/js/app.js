@@ -14,8 +14,9 @@ import {
   getDayTasks,
   createEntry,
   validate,
+  getTask,
   update,
-  deleteTasks,
+  discard,
 } from "./tasks.js";
 // access the DOM to...
 // declare variables for creating the calendar
@@ -47,9 +48,11 @@ let startDateTimeInput;
 let endDateTimeInput;
 // declare variables for creating popups
 let deleteTaskPopup;
-let deleteEventPopup;
+// let deleteEventPopup;
 let confirmDeleteTaskBtn;
-let confirmDeleteEventBtn;
+// let confirmDeleteEventBtn;
+
+let date = null;
 window.addEventListener("DOMContentLoaded", () => {
   calContainer = document.getElementById("cal-section");
   calendar = document.getElementById("cal-body");
@@ -64,6 +67,7 @@ window.addEventListener("DOMContentLoaded", () => {
   cancelTaskBtn = document.getElementById("cancel-task-btn");
   deleteTaskBtn = document.getElementById("delete-task-btn");
   saveTaskBtn = document.getElementById("save-task-btn");
+  console.log("saveTaskBtn:", saveTaskBtn);
   formSection = document.getElementById("form-container");
   taskRadioDiv = document.getElementById("task-radio-div");
   taskRadio = document.getElementById("task");
@@ -84,19 +88,54 @@ window.addEventListener("DOMContentLoaded", () => {
   // confirmDeleteEventBtn = document.getElementById("confirm-delete-event-btn");
 
   calendar.addEventListener("click", (e) => {
+    console.log("clicked element:", e.target);
+    const addIcon = e.target.closest(".add-task-icon");
     const dayEl = e.target.closest(".day");
 
-    if (dayEl) {
-      const date = dayEl.dataset.date;
+    if (addIcon && dayEl) {
+      date = dayEl.dataset.date;
+      currentTask = {};
+      taskTitleInput.value = "";
+      taskDescInput.value = "";
+      startDateTimeInput.value = "";
+      endDateTimeInput.value = "";
+
+      calContainer.classList.add("hidden");
+      formContainer.classList.remove("hidden");
+      deleteTaskBtn.classList.add("hidden");
       console.log("Date selected:", date);
 
-      // loadTasksOfDay(date);
+      if (editIcon && dayEl) {
+        date = dayEl.dataset.date;
+        const raw = localStorage.getItem("data");
+        const data = raw ? JSON.parse(raw) : {};
+        dayTasks = data[date];
+        console.log("editIcon clicked, taskDate:", date, "dayTasks:", dayTasks);
+      }
+
+      if (dayTasks && dayTasks.length > 0) {
+        const task = dayTasks[0];
+        currentTask = task;
+        taskDate = date;
+
+        taskTitleInput.value = task.title;
+        taskDescInput.value = task.description;
+        startDateTimeInput.value = task["start date"];
+        endDateTimeInput.value = task["end date"];
+
+        calContainer.classList.toggle("hidden");
+        formContainer.classList.toggle("hidden");
+        deleteTaskBtn.classList.toggle("hidden");
+      }
+
+      console.log("Date selected:", date);
     }
   });
 
   prevMonthBtn.addEventListener("click", previousMonth);
   nextMonthBtn.addEventListener("click", nextMonth);
   addNewTaskBtn.addEventListener("click", () => {
+    date = new Date().toISOString().split("T")[0];
     formContainer.classList.toggle("hidden");
     calContainer.classList.toggle("hidden");
     deleteTaskBtn.classList.toggle("hidden");
@@ -109,12 +148,32 @@ window.addEventListener("DOMContentLoaded", () => {
     formContainer.classList.toggle("hidden");
     calContainer.classList.toggle("hidden");
   });
-  saveTaskBtn.addEventListener("click", () => {
+  saveTaskBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (currentTask.id) {
+      update(date, {
+        ...currentTask,
+        title: cleanUpEntries(taskTitleInput.value),
+        description: cleanUpEntries(taskDescInput.value),
+        "start date": startDateTimeInput.value,
+        "end date": endDateTimeInput.value,
+      });
+    } else {
+      save();
+    }
+
     formContainer.classList.toggle("hidden");
     calContainer.classList.toggle("hidden");
-
-    save();
+    updateCalendar(currentMonth, currentYear);
+    currentTask = {};
     console.log("Save button clicked");
+  });
+  deleteTaskBtn.addEventListener("click", () => {
+    discard(date, currentTask.id);
+    formContainer.classList.toggle("hidden");
+    calContainer.classList.toggle("hidden");
+    updateCalendar(currentMonth, currentYear);
   });
 
   /*  lowRadio.addEventListener("click", () => {
@@ -174,7 +233,7 @@ const drawCalBody = () => {
     const dateObj = new Date(currentYear, currentMonth, i - dayOneIdx + 1);
     const key = dateObj.toISOString().split("T")[0];
 
-    const taskList = JSON.parse(localStorage.getItem("tasks")) || {};
+    const taskList = JSON.parse(localStorage.getItem("data")) || {};
     const thisDayTasks = taskList[key] || [];
 
     const daySet = document.createElement("div");
@@ -193,24 +252,11 @@ const drawCalBody = () => {
 
     const addTaskIcon = document.createElement("button");
     addTaskIcon.classList.add("add-task-icon");
-    addTaskIcon.innerHTML = `<i class="fa-solid fa-plus hidden"></i>`;
+    addTaskIcon.innerHTML = `<i class="fa-solid fa-plus"></i>`;
 
     const editTaskIcon = document.createElement("button");
     editTaskIcon.classList.add("edit-task-icon");
-    editTaskIcon.innerHTML = `<i class="fa-solid fa-pen hidden"></i>`;
-
-    if (thisDayTasks.length > 0) {
-      const priorityLvls = thisDayTasks.map((task) => task.priority);
-
-      if (priorityLvls.includes("low-lvl")) {
-        day.classList.add("low-lvl");
-      } else if (priorityLvls.includes("medium-lvl")) {
-        day.classList.add("medium-lvl");
-      } else if (priorityLvls.includes("high-lvl")) {
-        day.classList.add("high-lvl");
-      }
-      updateCalendar(day);
-    }
+    editTaskIcon.innerHTML = `<i class="fa-solid fa-pen"></i>`;
 
     /* const eventName = document.createElement("div");
     eventName.classList.add("event-name"); */
@@ -232,6 +278,7 @@ const drawCalBody = () => {
 
 // update the calendar to display added/edited/deleted tasks or events
 const updateCalendar = (month, year, tasks) => {
+  const taskList = JSON.parse(localStorage.getItem("data")) || {};
   const dayElements = document.querySelectorAll(".day");
 
   const theFirst = new Date();
@@ -264,9 +311,11 @@ const updateCalendar = (month, year, tasks) => {
     const day = dayElements[i];
     const dayNumber = day.querySelector(".day-number");
     if (i >= firstDayOfWeek && dayCount <= daysInMonth) {
-      const thisDate = new Date(year, month, dayCount);
+      const thisDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(dayCount).padStart(2, "0")}`;
+
       // const eventName = document.querySelector(".event-name");
-      const taskName = document.querySelector(".task-name");
+      const taskName = day.querySelector(".task-name");
+
       // console.log(thisDate);
       /* 
       if (events[thisDate]) {
@@ -282,21 +331,35 @@ const updateCalendar = (month, year, tasks) => {
 
       // console.log({ taskName, tasks });
 
-      if (taskName && tasks && tasks[thisDate]) {
-        const task = tasks[thisDate];
-        taskName.innerHTML = `<button class="view-task-btn"><i class="fa-solid fa-trash"></i>&ensp; Delete</button>
-        <button class="view-task-btn"><i class="fa-solid fa-xmark"></i>&ensp; Close</button>
-        <p>${task.title}</p>
-        <p>${task.description}<p>`;
+      if (taskName && taskList[thisDate] && taskList[thisDate].length > 0) {
+        const task = taskList[thisDate][0];
+        taskName.classList.remove("hidden");
+        taskName.innerHTML = `<p class="task-text">${task.title}</p>
+        <p class="task-text">${task.description}<p>`;
+
+        const priorityLvls = taskList[thisDate].map((task) => task.priority);
+        day.classList.remove("low-lvl", "medium-lvl", "high-lvl");
+
+        if (priorityLvls.includes("high-lvl")) {
+          day.classList.add("high-lvl");
+        } else if (priorityLvls.includes("medium-lvl")) {
+          day.classList.add("medium-lvl");
+        } else if (priorityLvls.includes("low-lvl")) {
+          day.classList.add("low-lvl");
+        }
       } else {
         taskName.innerHTML = ``;
-        taskName.classList.toggle("hidden");
+        taskName.classList.add("hidden");
+        day.classList.remove("low-lvl", "medium-lvl", "high-lvl");
       }
 
       dayNumber.innerText = dayCount;
       dayCount++;
     } else {
       dayNumber.innerText = "";
+
+      const taskName = day.querySelector(".task-name");
+      taskName.classList.add("hidden");
     }
   }
 };
@@ -322,7 +385,7 @@ const cleanUpEntries = (str) => {
   return str.replace(/[^a-zA-Z0-9\s]/g, "");
 };
 
-const addOrUpdate = () => {
+/* const addOrUpdate = () => {
   const dataIndex = taskData.findIndex((item) => item.id === currentTask.id);
   const taskObj = {
     id: `${cleanUpEntries(taskTitleInput.value)
@@ -330,6 +393,9 @@ const addOrUpdate = () => {
       .split(" ")
       .join("-")}-${Date.now()}`,
     title: `${cleanUpEntries(taskTitleInput.value)}`,
+    date:
+      "All day" ||
+      `Starts: ${startDateTimeInput.value}; Ends: ${endDateTimeInput.value}`,
     description: `${cleanUpEntries(taskDescInput.value)}`,
   };
 
@@ -338,36 +404,49 @@ const addOrUpdate = () => {
   } else {
     taskData[dataIndex] = taskObj;
   }
-  localStorage.setItem("data", JSON.stringify(taskData));
-  // displayTaskOrEvent();
+  localStorage.setItem("tasks", JSON.stringify(taskData));
 };
-
+ */
 const save = () => {
-  const dayEl = document.querySelector(".day");
-  console.log(dayEl.dataset);
-  const date = dayEl.dataset.date;
+  const priorityChk = document.querySelector('input[name="priority"]:checked');
 
-  const taskList = JSON.parse(localStorage.getItem("tasks")) || [];
-  const dateKey = [...date];
-  const taskInfo = taskTitleInput.value;
+  if (!date || !taskTitleInput.value.trim()) return;
 
-  if (!taskData.dateKey) {
-    taskData.dateKey = [];
+  // console.log("about to call createEntry");
+  try {
+    createEntry(
+      date,
+      cleanUpEntries(taskTitleInput.value),
+      startDateTimeInput.value,
+      endDateTimeInput.value,
+      cleanUpEntries(taskDescInput.value),
+      priorityChk?.value,
+    );
+  } catch (error) {
+    console.error("createEntry failed", error);
   }
 
-  if (taskInfo) {
-    console.log(`Type of date key is: ${typeof dateKey}`);
-    taskList.dateKey.push(taskInfo);
-    taskInfo = "";
-  }
-
-  localStorage.setItem("data", JSON.stringify(taskData));
-
-  console.log(`Task(s) for ${dateKey}:`, taskInfo);
+  updateCalendar(currentMonth, currentYear);
 };
 
-const loadTasksOfDay = () => {};
+const resetForm = () => {
+  taskTitleInput.value = "";
+  taskDescInput.value = "";
+  startDateTimeInput.value = "";
+  endDateTimeInput.value = "";
+  formContainer.classList.toggle("hidden");
+  calContainer.classList.toggle("hidden");
+  currentTask = {};
+};
 
-/* addTaskOrEventBtn.addEventListener('click', {} => {
-  
-}) */
+const closeForm = () => {
+  const taskToRemove =
+    taskTitleInput.value !== (currentTask.title || "") ||
+    taskDescInput.value !== (currentTask.description || "");
+
+  if (taskToRemove) {
+    deleteTaskPopup.showModal();
+  } else {
+    resetForm();
+  }
+};

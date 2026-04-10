@@ -1,93 +1,99 @@
-const allTasks = {
-  "2025-04-01": [
-    {
-      id: 1,
-      title: "do the dishes",
-      description: "1. do dishes 2. take a nap",
-    },
-  ],
-};
+console.log("tasks.js loaded");
+
+const taskData = JSON.parse(localStorage.getItem("data")) || {};
 
 const getDayTasks = (day) => {
-  if (!taskData) {
-    return;
-  }
   return taskData[day] || [];
 };
-console.log(getDayTasks("2025-04-01"));
 
-const createEntry = (id, task, description) => {
-  if (!taskData[date]) {
-    taskData[date] = [];
-  }
-  const dayTasks = getDayTasks(taskData, date);
+const createEntry = (date, task, startDate, endDate, description, priority) => {
+  /* console.log("createEntry reached");
+  console.log("createEntry called with:", {
+    date,
+    task,
+    startDate,
+    endDate,
+    description,
+    priority,
+  }); */
 
-  let id = 0;
-  for (let i = 0; i < dayTasks.length; i++) {
-    const currentTask = dayTasks[i];
-    if (currentTask.id >= id) {
-      id = currentTask.id + 1;
-    }
+  const raw = localStorage.getItem("data");
+  const data = raw ? JSON.parse(raw) : {};
+
+  if (!data[date]) {
+    data[date] = [];
   }
 
   const newTask = {
-    id: id,
+    id: Date.now(),
     title: task,
+    "start date": startDate,
+    "end date": endDate,
     description: description,
+    priority: priority,
   };
-  dayTasks.push(newTask);
+
+  data[date].push(newTask);
+
+  try {
+    localStorage.setItem("data", JSON.stringify(data));
+    console.log("Saved successfully");
+  } catch (error) {
+    console.error("setItem failed:", error);
+  }
+
   return newTask;
 };
 
 const validate = (task) => {
-  const keys = Object.keys(task);
-
-  if (keys[0] !== "id") {
+  if (!task || task.title.trim() === "") {
     return false;
   }
-  if (keys[1] !== "title") {
-    return false;
-  }
-  if (keys[2] !== "description") {
-    return false;
-  }
-  return true;
+  return (
+    (task &&
+      typeof task.id !== "undefined" &&
+      typeof task.title === "string" &&
+      typeof task.startDate === "string" &&
+      typeof task.endDate === "string" &&
+      typeof task.description === "string") ||
+    console.error("Invalid task")
+  );
 };
 
-const getTask = (taskData, date, id) => {
-  const dayTasks = getDayTasks(taskData, date);
-  for (let i = 0; i < dayTaska.length; i++) {
-    const currentTask = dayTasks[i];
-    if (currentTask.id == id) {
-      return currentTask;
-    }
+const getTask = (date, id) => {
+  const dayTasks = getDayTasks(date);
+  return dayTasks.find((task) => task.id === id) || null;
+};
+const update = (date, task) => {
+  const raw = localStorage.getItem("data");
+  const data = raw ? JSON.parse(raw) : {};
+  const dayTasks = data[date] || [];
+  const taskIdx = dayTasks.findIndex((t) => t.id === task.id);
+  dayTasks[taskIdx] = { ...dayTasks[taskIdx], ...task };
+  taskData[date] = dayTasks;
+
+  localStorage.setItem("data", JSON.stringify(taskData));
+
+  if (taskIdx === -1) {
+    console.error("No task with that ID found");
+    return;
   }
 };
-const update = (taskData, date, task) => {
-  const dayTasks = getDayTasks(taskData, date);
 
-  for (let i = 0; i < dayTasks.length; i++) {
-    const currentTask = dayTasks[i];
-    if (currentTask.id === task.id) {
-      currentTask.title = task.title;
-      currentTask.description = task.description;
-      return;
-    }
-  }
-  console.error("No task with that ID found");
-};
+const discard = (date, id) => {
+  const raw = localStorage.getItem("data");
+  const data = raw ? JSON.parse(raw) : {};
+  const dayTasks = data[date] || [];
+  const taskIdx = dayTasks.findIndex((t) => t.id === task.id);
+  dayTasks.splice(taskIdx, 1);
+  taskData[date] = dayTasks;
 
-const discard = (taskData, date, id) => {
-  const dayTasks = getDayTasks(taskData, date);
-  for (let i = 0; i < dayTasks.length; i++) {
-    const currentTask = dayTasks[i];
-    if (currentTask.id === task.id) {
-      dayTasks.splice(i, 1);
-      console.log("Task ${id} deleted");
-      return;
-    }
+  localStorage.setItem("data", JSON.stringify(taskData));
+
+  if (taskIdx === -1) {
+    console.error("No task with that ID found");
+    return;
   }
-  console.error("No task with that ID found");
 };
 
 export { getDayTasks, createEntry, validate, getTask, update, discard };
