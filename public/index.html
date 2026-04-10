@@ -110,15 +110,16 @@
               </label>
             </div>
             <br />
-            <label for="priority">Priority:</label>
+            <p>Priority:</p>
             <div class="priority-list">
-              <div class="priority-div">
+              <div class="priority-div" id="priority">
                 <label for="low"
                   ><input
                     type="radio"
                     id="low"
                     name="priority"
                     class="priority-select"
+                    value="low-lvl"
                     selected
                   /><i class="fa-solid fa-circle" id="green"></i>&ensp;
                   Low</label
@@ -131,6 +132,7 @@
                     id="medium"
                     name="priority"
                     class="priority-select"
+                    value="medium-lvl"
                   /><i class="fa-solid fa-circle" id="yellow"></i>&ensp;
                   Medium</label
                 >
@@ -142,6 +144,7 @@
                     id="high"
                     name="priority"
                     class="priority-select"
+                    value="high-lvl"
                   /><i class="fa-solid fa-circle" id="red"></i>&ensp;
                   High</label
                 >
@@ -149,9 +152,8 @@
             </div>
           </fieldset>
           <fieldset class="form-section" id="date-and-time">
-            <legend class="section-name">Duration</legend>
-            <label for="date-time-select">Set a date and time:</label>
-            <div class="date-time-div">
+            <p>Set a date and time:</p>
+            <div class="date-time-div" id="date-time-select">
               <label for="all-day">
                 <input
                   type="radio"
@@ -169,13 +171,12 @@
                   id="start-and-end"
                   name="date-time-select"
                   class="selection"
-                  value="start-and-end"
                 />Start:<br /><input
                   type="datetime-local"
                   id="start"
                   name="start-and-end"
                   class="date-selection"
-                  value="2026-03-25T21:29"
+                  value=""
                 /><br />
                 <span id="end-title">End:</span><br />
                 <input
@@ -183,7 +184,7 @@
                   id="end"
                   name="start-and-end"
                   class="date-selection"
-                  value="2026-03-25T21:29"
+                  value=""
                 />
               </label>
             </div>
@@ -369,7 +370,7 @@
       </section>
     </main>
     <footer id="page-footer"></footer>
-    <script src="js/index.js"></script>
-    <script src="js/app.js"></script>
+    <script type="module" src="js/index.js"></script>
+    <script type="module" src="js/app.js"></script>
   </body>
 </html>
