@@ -81,19 +81,30 @@ const update = (date, task) => {
 };
 
 const discard = (date, id) => {
+  console.log("discard called with date:", date, "id:", id);
   const raw = localStorage.getItem("data");
   const data = raw ? JSON.parse(raw) : {};
   const dayTasks = data[date] || [];
-  const taskIdx = dayTasks.findIndex((t) => t.id === task.id);
-  dayTasks.splice(taskIdx, 1);
-  taskData[date] = dayTasks;
-
-  localStorage.setItem("data", JSON.stringify(taskData));
+  const taskIdx = dayTasks.findIndex((t) => t.id === id);
+  console.log("taskIdx:", taskIdx);
 
   if (taskIdx === -1) {
     console.error("No task with that ID found");
     return;
   }
+
+  dayTasks.splice(taskIdx, 1);
+
+  if (dayTasks.length === 0) {
+    delete data[date];
+  } else {
+    data[date] = dayTasks;
+  }
+
+  console.log("after splice, dayTasks:", dayTasks);
+  console.log("data after splice:", data);
+  localStorage.setItem("data", JSON.stringify(taskData));
+  console.log("saved:", localStorage.getItem("data"));
 };
 
 export { getDayTasks, createEntry, validate, getTask, update, discard };
