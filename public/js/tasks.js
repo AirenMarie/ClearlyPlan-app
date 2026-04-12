@@ -75,6 +75,7 @@ const discard = (date, id) => {
   const data = raw ? JSON.parse(raw) : {};
   const dayTasks = data[date] || [];
   const taskIdx = dayTasks.findIndex((t) => t.id === id);
+  console.log("taskIdx:", taskIdx);
 
   if (taskIdx === -1) {
     console.error("No task with that ID found");
