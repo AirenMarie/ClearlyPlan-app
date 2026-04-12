@@ -89,7 +89,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
   calendar.addEventListener("click", (e) => {
     console.log("clicked element:", e.target);
+    console.log("clicked element classes:", e.target.className);
+    console.log("parent element:", e.target.parentElement);
+    console.log("parent classes:", e.target.parentElement?.className);
+
     const addIcon = e.target.closest(".add-task-icon");
+    const editIcon = e.target.closest(".edit-task-icon");
+    console.log("addIcon:", addIcon);
+    console.log("editIcon:", editIcon);
+
     const dayEl = e.target.closest(".day");
 
     if (addIcon && dayEl) {
@@ -104,31 +112,31 @@ window.addEventListener("DOMContentLoaded", () => {
       formContainer.classList.remove("hidden");
       deleteTaskBtn.classList.add("hidden");
       console.log("Date selected:", date);
+    }
 
-      if (editIcon && dayEl) {
-        date = dayEl.dataset.date;
-        const raw = localStorage.getItem("data");
-        const data = raw ? JSON.parse(raw) : {};
-        dayTasks = data[date];
-        console.log("editIcon clicked, taskDate:", date, "dayTasks:", dayTasks);
-      }
+    if (editIcon && dayEl) {
+      console.log("editIcon condition met");
+      date = dayEl.dataset.date;
+      const raw = localStorage.getItem("data");
+      const data = raw ? JSON.parse(raw) : {};
+      const dayTasks = data[date];
+      console.log("date:", date);
+      console.log("data:", data);
+      console.log("dayTasks:", dayTasks);
 
       if (dayTasks && dayTasks.length > 0) {
         const task = dayTasks[0];
         currentTask = task;
-        taskDate = date;
 
         taskTitleInput.value = task.title;
         taskDescInput.value = task.description;
         startDateTimeInput.value = task["start date"];
         endDateTimeInput.value = task["end date"];
 
-        calContainer.classList.toggle("hidden");
-        formContainer.classList.toggle("hidden");
-        deleteTaskBtn.classList.toggle("hidden");
+        calContainer.classList.add("hidden");
+        formContainer.classList.remove("hidden");
+        deleteTaskBtn.classList.remove("hidden");
       }
-
-      console.log("Date selected:", date);
     }
   });
 
@@ -136,17 +144,17 @@ window.addEventListener("DOMContentLoaded", () => {
   nextMonthBtn.addEventListener("click", nextMonth);
   addNewTaskBtn.addEventListener("click", () => {
     date = new Date().toISOString().split("T")[0];
-    formContainer.classList.toggle("hidden");
-    calContainer.classList.toggle("hidden");
-    deleteTaskBtn.classList.toggle("hidden");
+    formContainer.classList.remove("hidden");
+    calContainer.classList.add("hidden");
+    deleteTaskBtn.classList.add("hidden");
   });
   editTaskBtn.addEventListener("click", () => {
     formContainer.classList.toggle("hidden");
     calContainer.classList.toggle("hidden");
   });
   cancelTaskBtn.addEventListener("click", () => {
-    formContainer.classList.toggle("hidden");
-    calContainer.classList.toggle("hidden");
+    formContainer.classList.add("hidden");
+    calContainer.classList.remove("hidden");
   });
   saveTaskBtn.addEventListener("click", (e) => {
     e.preventDefault();
@@ -170,9 +178,10 @@ window.addEventListener("DOMContentLoaded", () => {
     console.log("Save button clicked");
   });
   deleteTaskBtn.addEventListener("click", () => {
+    console.log("delete clicked, date:", date, "currentTask:", currentTask);
     discard(date, currentTask.id);
-    formContainer.classList.toggle("hidden");
-    calContainer.classList.toggle("hidden");
+    formContainer.classList.add("hidden");
+    calContainer.classList.remove("hidden");
     updateCalendar(currentMonth, currentYear);
   });
 
