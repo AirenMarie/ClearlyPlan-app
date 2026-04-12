@@ -53,6 +53,7 @@ let confirmDeleteTaskBtn;
 // let confirmDeleteEventBtn;
 
 let date = null;
+let selectedDate = null;
 window.addEventListener("DOMContentLoaded", () => {
   calContainer = document.getElementById("cal-section");
   calendar = document.getElementById("cal-body");
@@ -61,13 +62,13 @@ window.addEventListener("DOMContentLoaded", () => {
   nextMonthBtn = document.getElementById("next-month");
   addNewTaskBtn = document.getElementById("add-new-task-btn");
   editTaskBtn = document.getElementById("edit-task-btn");
+  console.log("editTaskBtn:", editTaskBtn);
   // declare variables for creating the task/event form
   formContainer = document.getElementById("form-container");
   addTaskForm = document.getElementById("add-task-form");
   cancelTaskBtn = document.getElementById("cancel-task-btn");
   deleteTaskBtn = document.getElementById("delete-task-btn");
   saveTaskBtn = document.getElementById("save-task-btn");
-  console.log("saveTaskBtn:", saveTaskBtn);
   formSection = document.getElementById("form-container");
   taskRadioDiv = document.getElementById("task-radio-div");
   taskRadio = document.getElementById("task");
@@ -88,20 +89,17 @@ window.addEventListener("DOMContentLoaded", () => {
   // confirmDeleteEventBtn = document.getElementById("confirm-delete-event-btn");
 
   calendar.addEventListener("click", (e) => {
-    console.log("clicked element:", e.target);
-    console.log("clicked element classes:", e.target.className);
-    console.log("parent element:", e.target.parentElement);
-    console.log("parent classes:", e.target.parentElement?.className);
-
     const addIcon = e.target.closest(".add-task-icon");
     const editIcon = e.target.closest(".edit-task-icon");
-    console.log("addIcon:", addIcon);
-    console.log("editIcon:", editIcon);
 
     const dayEl = e.target.closest(".day");
 
+    if (dayEl) {
+      selectedDate = dayEl.dataset.date;
+    }
+
     if (addIcon && dayEl) {
-      date = dayEl.dataset.date;
+      selectedDate = dayEl.dataset.date;
       currentTask = {};
       taskTitleInput.value = "";
       taskDescInput.value = "";
@@ -111,18 +109,13 @@ window.addEventListener("DOMContentLoaded", () => {
       calContainer.classList.add("hidden");
       formContainer.classList.remove("hidden");
       deleteTaskBtn.classList.add("hidden");
-      console.log("Date selected:", date);
     }
 
     if (editIcon && dayEl) {
-      console.log("editIcon condition met");
       date = dayEl.dataset.date;
       const raw = localStorage.getItem("data");
       const data = raw ? JSON.parse(raw) : {};
       const dayTasks = data[date];
-      console.log("date:", date);
-      console.log("data:", data);
-      console.log("dayTasks:", dayTasks);
 
       if (dayTasks && dayTasks.length > 0) {
         const task = dayTasks[0];
@@ -144,15 +137,53 @@ window.addEventListener("DOMContentLoaded", () => {
   nextMonthBtn.addEventListener("click", nextMonth);
   addNewTaskBtn.addEventListener("click", () => {
     date = new Date().toISOString().split("T")[0];
+    currentTask = {};
+
+    taskTitleInput.value = "";
+    taskDescInput.value = "";
+    startDateTimeInput.value = "";
+    endDateTimeInput.value = "";
+    document.querySelector('input[name="priority"][value="low-lvl"]').checked =
+      true;
+    allDayRadio.checked = true;
+
     formContainer.classList.remove("hidden");
     calContainer.classList.add("hidden");
     deleteTaskBtn.classList.add("hidden");
   });
   editTaskBtn.addEventListener("click", () => {
-    formContainer.classList.toggle("hidden");
-    calContainer.classList.toggle("hidden");
+    if (!selectedDate) return;
+
+    const raw = localStorage.getItem("data");
+    const data = raw ? JSON.parse(raw) : {};
+    const dayTasks = data[selectedDate];
+
+    if (dayTasks && dayTasks.length > 0) {
+      const task = dayTasks[0];
+      currentTask = task;
+
+      taskTitleInput.value = task.title;
+      taskDescInput.value = task.description;
+      startDateTimeInput.value = task["start date"];
+      endDateTimeInput.value = task["end date"];
+      document.querySelector(
+        `input[name="priority"][value="${task.priority}"]`,
+      ).checked = true;
+
+      formContainer.classList.remove("hidden");
+      calContainer.classList.add("hidden");
+      deleteTaskBtn.classList.remove("hidden");
+    }
   });
   cancelTaskBtn.addEventListener("click", () => {
+    date = null;
+    currentTask = {};
+
+    taskTitleInput.value = "";
+    taskDescInput.value = "";
+    startDateTimeInput.value = "";
+    endDateTimeInput.value = "";
+
     formContainer.classList.add("hidden");
     calContainer.classList.remove("hidden");
   });
@@ -166,37 +197,37 @@ window.addEventListener("DOMContentLoaded", () => {
         description: cleanUpEntries(taskDescInput.value),
         "start date": startDateTimeInput.value,
         "end date": endDateTimeInput.value,
+        priority: document.querySelector('input[name="priority"]:checked')
+          ?.value,
       });
     } else {
       save();
     }
 
-    formContainer.classList.toggle("hidden");
-    calContainer.classList.toggle("hidden");
+    formContainer.classList.add("hidden");
+    calContainer.classList.remove("hidden");
     updateCalendar(currentMonth, currentYear);
     currentTask = {};
-    console.log("Save button clicked");
   });
   deleteTaskBtn.addEventListener("click", () => {
-    console.log("delete clicked, date:", date, "currentTask:", currentTask);
+    date = null;
+    currentTask = {};
     discard(date, currentTask.id);
+
     formContainer.classList.add("hidden");
     calContainer.classList.remove("hidden");
     updateCalendar(currentMonth, currentYear);
   });
-
-  /*  lowRadio.addEventListener("click", () => {
-    const dayElements = document.querySelector(".day");
-    dayElements.style.backgroundColor = "#5dcf00";
+  allDayRadio.addEventListener("change", () => {
+    startDateTimeInput.closest("label").style.display = "none";
+    endDateTimeInput.closest("label").style.display = "none";
+    startDateTimeInput.value = "";
+    endDateTimeInput.value = "";
   });
-  mediumRadio.addEventListener("click", () => {
-    const dayElements = document.querySelector(".day");
-    dayElements.style.backgroundColor = "#fdda03";
+  startEndDateRadio.addEventListener("change", () => {
+    startDateTimeInput.closest("label").style.display = "block";
+    endDateTimeInput.closest("label").style.display = "block";
   });
-  highRadio.addEventListener("click", () => {
-    const dayElements = document.querySelector(".day");
-    dayElements.style.backgroundColor = "#f80200";
-  }); */
 
   drawCalBody();
   updateCalendar(currentMonth, currentYear, tasks);
@@ -207,8 +238,6 @@ window.addEventListener("DOMContentLoaded", () => {
 // declare variables for task and event data
 const taskData = JSON.parse(localStorage.getItem("data")) || {};
 let currentTask = {};
-
-console.log(taskData);
 
 const months = [
   "January",
@@ -266,7 +295,6 @@ const drawCalBody = () => {
     const editTaskIcon = document.createElement("button");
     editTaskIcon.classList.add("edit-task-icon");
     editTaskIcon.innerHTML = `<i class="fa-solid fa-pen"></i>`;
-
     /* const eventName = document.createElement("div");
     eventName.classList.add("event-name"); */
 
@@ -421,7 +449,6 @@ const save = () => {
 
   if (!date || !taskTitleInput.value.trim()) return;
 
-  // console.log("about to call createEntry");
   try {
     createEntry(
       date,
