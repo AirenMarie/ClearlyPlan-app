@@ -7,16 +7,6 @@ const getDayTasks = (day) => {
 };
 
 const createEntry = (date, task, startDate, endDate, description, priority) => {
-  /* console.log("createEntry reached");
-  console.log("createEntry called with:", {
-    date,
-    task,
-    startDate,
-    endDate,
-    description,
-    priority,
-  }); */
-
   const raw = localStorage.getItem("data");
   const data = raw ? JSON.parse(raw) : {};
 
@@ -70,23 +60,21 @@ const update = (date, task) => {
   const dayTasks = data[date] || [];
   const taskIdx = dayTasks.findIndex((t) => t.id === task.id);
   dayTasks[taskIdx] = { ...dayTasks[taskIdx], ...task };
-  taskData[date] = dayTasks;
-
-  localStorage.setItem("data", JSON.stringify(taskData));
+  data[date] = dayTasks;
 
   if (taskIdx === -1) {
     console.error("No task with that ID found");
     return;
   }
+
+  localStorage.setItem("data", JSON.stringify(data));
 };
 
 const discard = (date, id) => {
-  console.log("discard called with date:", date, "id:", id);
   const raw = localStorage.getItem("data");
   const data = raw ? JSON.parse(raw) : {};
   const dayTasks = data[date] || [];
   const taskIdx = dayTasks.findIndex((t) => t.id === id);
-  console.log("taskIdx:", taskIdx);
 
   if (taskIdx === -1) {
     console.error("No task with that ID found");
@@ -101,10 +89,7 @@ const discard = (date, id) => {
     data[date] = dayTasks;
   }
 
-  console.log("after splice, dayTasks:", dayTasks);
-  console.log("data after splice:", data);
-  localStorage.setItem("data", JSON.stringify(taskData));
-  console.log("saved:", localStorage.getItem("data"));
+  localStorage.setItem("data", JSON.stringify(data));
 };
 
 export { getDayTasks, createEntry, validate, getTask, update, discard };
