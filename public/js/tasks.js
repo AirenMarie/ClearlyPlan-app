@@ -7,8 +7,7 @@ const getDayTasks = (day) => {
 };
 
 const createEntry = (date, task, startDate, endDate, description, priority) => {
-  const raw = localStorage.getItem("data");
-  const data = raw ? JSON.parse(raw) : {};
+  const data = taskData;
 
   if (!data[date]) {
     data[date] = [];
@@ -55,8 +54,7 @@ const getTask = (date, id) => {
   return dayTasks.find((task) => task.id === id) || null;
 };
 const update = (date, task) => {
-  const raw = localStorage.getItem("data");
-  const data = raw ? JSON.parse(raw) : {};
+  const data = taskData;
   const dayTasks = data[date] || [];
   const taskIdx = dayTasks.findIndex((t) => t.id === task.id);
   dayTasks[taskIdx] = { ...dayTasks[taskIdx], ...task };
@@ -71,8 +69,7 @@ const update = (date, task) => {
 };
 
 const discard = (date, id) => {
-  const raw = localStorage.getItem("data");
-  const data = raw ? JSON.parse(raw) : {};
+  const data = taskData;
   const dayTasks = data[date] || [];
   const taskIdx = dayTasks.findIndex((t) => t.id === id);
   console.log("taskIdx:", taskIdx);

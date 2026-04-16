@@ -113,8 +113,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (editIcon && dayEl) {
       date = dayEl.dataset.date;
-      const raw = localStorage.getItem("data");
-      const data = raw ? JSON.parse(raw) : {};
+      const data = JSON.parse(localStorage.getItem("data")) || {};
       const dayTasks = data[date];
 
       if (dayTasks && dayTasks.length > 0) {
@@ -154,8 +153,7 @@ window.addEventListener("DOMContentLoaded", () => {
   editTaskBtn.addEventListener("click", () => {
     if (!selectedDate) return;
 
-    const raw = localStorage.getItem("data");
-    const data = raw ? JSON.parse(raw) : {};
+    const data = JSON.parse(localStorage.getItem("data")) || {};
     const dayTasks = data[selectedDate];
 
     if (dayTasks && dayTasks.length > 0) {
