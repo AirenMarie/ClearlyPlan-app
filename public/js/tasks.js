@@ -71,6 +71,11 @@ const update = (date, task) => {
 const discard = (date, id) => {
   const data = taskData;
   const dayTasks = data[date] || [];
+  console.log("looking for id:", id, "type:", typeof id);
+  console.log(
+    "dayTasks ids:",
+    dayTasks.map((t) => ({ id: t.id, type: typeof t.id })),
+  );
   const taskIdx = dayTasks.findIndex((t) => t.id === id);
   console.log("taskIdx:", taskIdx);
 

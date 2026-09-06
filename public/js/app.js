@@ -153,6 +153,8 @@ window.addEventListener("DOMContentLoaded", () => {
   editTaskBtn.addEventListener("click", () => {
     if (!selectedDate) return;
 
+    date = selectedDate;
+
     const data = JSON.parse(localStorage.getItem("data")) || {};
     const dayTasks = data[selectedDate];
 
@@ -186,7 +188,7 @@ window.addEventListener("DOMContentLoaded", () => {
     calContainer.classList.remove("hidden");
   });
   saveTaskBtn.addEventListener("click", (e) => {
-    e.preventDefault();
+    console.log("saveTaskBtn fired");
 
     if (currentTask.id) {
       update(date, {
@@ -208,8 +210,21 @@ window.addEventListener("DOMContentLoaded", () => {
     currentTask = {};
   });
   deleteTaskBtn.addEventListener("click", () => {
+    console.log("currentTask at delete:", currentTask);
+    console.log("date at delete:", date);
+    console.log("1. currentTask:", currentTask);
+    console.log("2. currentTask.id:", currentTask.id);
+    const idToDelete = currentTask.id;
+    console.log("3. idToDelete:", idToDelete);
+    discard(date, idToDelete);
+
     date = null;
     currentTask = {};
+    console.log("deleteTaskBtn clicked");
+    console.log("currentTask at delete:", currentTask);
+    console.log("date at delete:", date);
+    console.log("id being passed:", currentTask.id);
+    console.log("typeof id:", typeof currentTask.id);
     discard(date, currentTask.id);
 
     formContainer.classList.add("hidden");
@@ -217,14 +232,18 @@ window.addEventListener("DOMContentLoaded", () => {
     updateCalendar(currentMonth, currentYear);
   });
   allDayRadio.addEventListener("change", () => {
-    startDateTimeInput.closest("label").style.display = "none";
-    endDateTimeInput.closest("label").style.display = "none";
-    startDateTimeInput.value = "";
-    endDateTimeInput.value = "";
+    if (allDayRadio.checked) {
+      startDateTimeInput.closest("label").style.display = "none";
+      endDateTimeInput.closest("label").style.display = "none";
+      startDateTimeInput.value = "";
+      endDateTimeInput.value = "";
+    }
   });
   startEndDateRadio.addEventListener("change", () => {
-    startDateTimeInput.closest("label").style.display = "block";
-    endDateTimeInput.closest("label").style.display = "block";
+    if (startEndDateRadio.checked) {
+      startDateTimeInput.closest("label").style.display = "block";
+      endDateTimeInput.closest("label").style.display = "block";
+    }
   });
 
   drawCalBody();
@@ -444,6 +463,9 @@ const cleanUpEntries = (str) => {
  */
 const save = () => {
   const priorityChk = document.querySelector('input[name="priority"]:checked');
+  const dateTimeSet = document.querySelector(
+    'input[name="date-time-select]:checked',
+  )?.value;
 
   if (!date || !taskTitleInput.value.trim()) return;
 
@@ -451,8 +473,8 @@ const save = () => {
     createEntry(
       date,
       cleanUpEntries(taskTitleInput.value),
-      startDateTimeInput.value,
-      endDateTimeInput.value,
+      dateTimeSet === "all-day" ? "all-day" : startDateTimeInput.value,
+      dateTimeSet === "all-day" ? "all-day" : endDateTimeInput.value,
       cleanUpEntries(taskDescInput.value),
       priorityChk?.value,
     );

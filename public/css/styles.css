@@ -273,6 +273,11 @@ main {
     top: 5%;
   }
 
+  /*   #start,
+  #end {
+    display: none;
+  } */
+
   .task-name .task-text {
     display: block;
   }
